@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'model/produit.dart';
+import 'package:drift/drift.dart' as drift;
+import 'data/base.dart';
+import 'dao/produit_dao.dart';
 
 class AddProduitForm extends StatefulWidget {
-  final Function(Produit) onAdd;
+  final ProduitDao dao;
 
-  const AddProduitForm({super.key, required this.onAdd});
+  const AddProduitForm({super.key, required this.dao});
 
   @override
   State<AddProduitForm> createState() => _AddProduitFormState();
@@ -14,7 +17,10 @@ class AddProduitForm extends StatefulWidget {
 
 class _AddProduitFormState extends State<AddProduitForm> {
   final _formKey = GlobalKey<FormState>();
-  final Produit _produit = Produit();
+  String _libelle = '';
+  String _description = '';
+  double _prix = 0.0;
+  String _photo = '';
   String? _pickedImagePath;
 
   final ImagePicker _picker = ImagePicker();
@@ -24,7 +30,7 @@ class _AddProduitFormState extends State<AddProduitForm> {
     if (image != null) {
       setState(() {
         _pickedImagePath = image.path;
-        _produit.photo = image.path;
+        _photo = image.path;
       });
     }
   }
@@ -46,7 +52,10 @@ class _AddProduitFormState extends State<AddProduitForm> {
                   color: Colors.grey[200],
                   child: _pickedImagePath == null
                       ? const Icon(Icons.add_a_photo, size: 50)
-                      : Image.file(File(_pickedImagePath!), fit: BoxFit.cover),
+                      : (kIsWeb
+                          ? Image.network(_pickedImagePath!, fit: BoxFit.cover)
+                          : Image.file(File(_pickedImagePath!),
+                              fit: BoxFit.cover)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -58,11 +67,11 @@ class _AddProduitFormState extends State<AddProduitForm> {
                   }
                   return null;
                 },
-                onSaved: (value) => _produit.libelle = value!,
+                onSaved: (value) => _libelle = value!,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Description'),
-                onSaved: (value) => _produit.description = value ?? '',
+                onSaved: (value) => _description = value ?? '',
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Prix'),
@@ -76,14 +85,20 @@ class _AddProduitFormState extends State<AddProduitForm> {
                   }
                   return null;
                 },
-                onSaved: (value) => _produit.prix = double.parse(value!),
+                onSaved: (value) => _prix = double.parse(value!),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    widget.onAdd(_produit);
+                    final produit = ProduitsCompanion(
+                      libelle: drift.Value(_libelle),
+                      description: drift.Value(_description),
+                      prix: drift.Value(_prix),
+                      photo: drift.Value(_photo),
+                    );
+                    widget.dao.insertProduit(produit);
                     Navigator.pop(context);
                   }
                 },

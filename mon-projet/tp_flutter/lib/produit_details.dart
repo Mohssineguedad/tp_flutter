@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
-import 'model/produit.dart';
+import 'data/base.dart';
 
 class ProduitDetails extends StatelessWidget {
   final Produit produit;
@@ -18,14 +19,23 @@ class ProduitDetails extends StatelessWidget {
           children: [
             if (produit.photo.isNotEmpty)
               Center(
-                child: Image.file(
-                  File(produit.photo),
-                  height: 250,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image, size: 100);
-                  },
-                ),
+                child: kIsWeb
+                    ? Image.network(
+                        produit.photo,
+                        height: 250,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image, size: 100);
+                        },
+                      )
+                    : Image.file(
+                        File(produit.photo),
+                        height: 250,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image, size: 100);
+                        },
+                      ),
               )
             else
               const Center(child: Icon(Icons.image_not_supported, size: 100)),
