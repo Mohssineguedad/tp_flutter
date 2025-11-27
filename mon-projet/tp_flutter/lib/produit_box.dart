@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'model/produit.dart';
+import 'data/base.dart';
 
 class ProduitBox extends StatelessWidget {
   final Produit produit;
@@ -38,62 +39,63 @@ class ProduitBox extends StatelessWidget {
         child: GestureDetector(
           onTap: onTap,
           child: Container(
-            height: 100, // Increased height for image
+            height: 120,
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              color: const Color(0xFFFFF540), // Yellow color from image
+              borderRadius: BorderRadius.circular(50), // Pill shape
             ),
             child: Row(
               children: [
-                Checkbox(
-                  value: produit.isSelected,
-                  onChanged: onChanged,
-                ),
+                const SizedBox(width: 20),
                 if (produit.photo.isNotEmpty)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.file(
-                      File(produit.photo),
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.broken_image, size: 50),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: kIsWeb
+                          ? Image.network(
+                              produit.photo,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.broken_image, size: 40),
+                            )
+                          : Image.file(
+                              File(produit.photo),
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.broken_image, size: 40),
+                            ),
                     ),
                   )
                 else
-                  const SizedBox(
+                  Container(
                     width: 80,
                     height: 80,
-                    child: Icon(Icons.image, size: 50, color: Colors.grey),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.image, size: 40, color: Colors.grey),
                   ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 20),
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        produit.libelle,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${produit.prix} MAD',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.green),
-                      ),
-                    ],
+                  child: Text(
+                    produit.libelle.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                const SizedBox(width: 20),
               ],
             ),
           ),
