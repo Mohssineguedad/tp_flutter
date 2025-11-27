@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  flutter:
+    build: .
+    container_name: flutter_dev
+    volumes:
+      # Monter votre projet local dans le conteneur
+      - ./mon-projet:/app
+      # Partager le cache Flutter pour gagner de l'espace
+      - flutter_pub_cache:/root/.pub-cache
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    ports:
+      # Port pour le web debugging
+      - "8080:8080"
+      # Port pour le hot reload
+      - "35000:35000"
+    command: /bin/bash
+
+volumes:
+  flutter_pub_cache:
