@@ -1,0 +1,21 @@
+services:
+  flutter:
+    build: .
+    container_name: flutter_dev
+    volumes:
+      # Mount the root project folder into the container
+      - ./:/app
+      # Share Flutter pub cache
+      - flutter_pub_cache:/root/.pub-cache
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    ports:
+      # Web dev server port
+      - "8080:5000"
+      # Dart debugger port
+      - "8181:8181"
+    command: /bin/bash
+
+volumes:
+  flutter_pub_cache:

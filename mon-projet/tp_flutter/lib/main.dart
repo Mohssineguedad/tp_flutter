@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // Généré par flutterfire configure
 import 'data/base.dart';
 import 'dao/produit_dao.dart';
 import 'produits_list.dart';
+import 'login_ecran.dart';
 
-// Point d'entrée principal - Version Drift (Atelier 3)
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialisation de Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MainApp());
 }
 
@@ -19,7 +28,6 @@ class MainApp extends StatelessWidget {
     
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // Thème avec primarySwatch: Colors.blue
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
@@ -35,8 +43,7 @@ class MainApp extends StatelessWidget {
           ),
         ),
       ),
-      // Page d'accueil = ProduitsList avec DAO Drift
-      home: ProduitsList(dao: dao),
+      home: LoginEcran(),
     );
   }
 }

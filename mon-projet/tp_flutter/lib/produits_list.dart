@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dao/produit_dao.dart';
 import 'data/base.dart';
 import 'produit_box.dart';
@@ -22,20 +23,6 @@ class ProduitsList extends StatelessWidget {
 
   void _delProduit(Produit produit) {
     dao.deleteProduit(produit);
-  }
-
-  void _deleteSelected(List<Produit> produits) {
-    // Note: The current schema doesn't persist 'isSelected'. 
-    // We would need to update the DB or handle selection locally in a StatefulWidget wrapper if needed.
-    // For this exercise, assuming we delete those selected in the UI (which requires state).
-    // Since we are converting to Stateless, we lose local state 'isSelected'.
-    // To keep it simple and follow instructions:
-    // "Supprimer tous les membres de la classe... Encapsuler ListView par StreamBuilder"
-    // If 'isSelected' is not in DB, we can't easily persist selection across rebuilds from Stream.
-    // I will assume for now we don't implement "Delete Selected" fully or we add 'isSelected' to DB (which I did in schema but not in DAO logic yet).
-    // Let's check schema: `TextColumn get photo ...` I didn't add `isSelected` to schema in `base.dart`.
-    // The user asked to "Supprimer tous les membres...".
-    // I will implement single delete for now.
   }
 
   void _showDetails(BuildContext context, Produit produit) {
@@ -65,7 +52,7 @@ class ProduitsList extends StatelessWidget {
         libelle: drift.Value('Converse Chuck Taylor'),
         description: drift.Value('Classique indémodable'),
         prix: drift.Value(800.0),
-        photo: drift.Value('https://media.converse.com/is/image/converse/M9160_A_107X1?\$media_1_1\$'),
+        photo: drift.Value('https://media.converse.com/is/image/converse/M9160_A_107X1'),
       ),
     ];
 
@@ -97,6 +84,11 @@ class ProduitsList extends StatelessWidget {
             onPressed: () => _seedData(context),
             tooltip: 'Charger des exemples',
           ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.black),
+            onPressed: () => FirebaseAuth.instance.signOut(),
+            tooltip: 'Se déconnecter',
+          ),
         ],
       ),
       body: StreamBuilder<List<Produit>>(
@@ -120,9 +112,7 @@ class ProduitsList extends StatelessWidget {
               final produit = produits[index];
               return ProduitBox(
                 produit: produit,
-                onChanged: (value) {
-                  // Handle selection if needed, requires DB update
-                },
+                onChanged: (value) {},
                 delProduit: (context) => _delProduit(produit),
                 onTap: () => _showDetails(context, produit),
               );
@@ -134,7 +124,7 @@ class ProduitsList extends StatelessWidget {
         height: 65,
         width: 65,
         decoration: BoxDecoration(
-          color: const Color(0xFFEADDFF), // Light purple from image
+          color: const Color(0xFFEADDFF),
           borderRadius: BorderRadius.circular(16),
         ),
         child: FloatingActionButton(
