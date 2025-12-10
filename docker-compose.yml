@@ -5,18 +5,14 @@ services:
     build: .
     container_name: flutter_dev
     volumes:
-      # Monter votre projet local dans le conteneur
-      - ./mon-projet:/app
-      # Partager le cache Flutter pour gagner de l'espace
-      - flutter_pub_cache:/root/.pub-cache
+      - ./mon-projet:/app           # Monte votre projet local dans le conteneur
+      - flutter_pub_cache:/root/.pub-cache   # Partager le cache Flutter pour gagner de l'espace
     working_dir: /app
     stdin_open: true
     tty: true
     ports:
-      # Port pour le web debugging
-      - "8080:8080"
-      # Port pour le hot reload
-      - "35000:35000"
+      - "8080:8080"    # Port pour le web debugging
+      - "35000:35000"  # Port pour le hot reload
     command: /bin/bash
 
 volumes:

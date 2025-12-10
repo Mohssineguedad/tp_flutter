@@ -22,6 +22,8 @@ ENV CHROME_EXECUTABLE=/usr/bin/chromium-browser
 # Définir les variables d'environnement pour Flutter
 ENV FLUTTER_HOME=/opt/flutter
 ENV PATH="$FLUTTER_HOME/bin:$PATH"
+ENV PUB_CACHE=/root/.pub-cache
+ENV PATH="$PUB_CACHE/bin:$PATH"
 
 # Télécharger et installer Flutter
 RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME
@@ -30,10 +32,14 @@ RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME
 RUN flutter precache
 RUN flutter doctor
 
+# Installer FlutterFire CLI
+RUN dart pub global activate flutterfire_cli
+
 # Créer un répertoire de travail
 WORKDIR /app
 
-# Accepter les licences Android (si nécessaire)
+# Accepter les licences Android
 RUN yes | flutter doctor --android-licenses || true
 
 CMD ["/bin/bash"]
+ 

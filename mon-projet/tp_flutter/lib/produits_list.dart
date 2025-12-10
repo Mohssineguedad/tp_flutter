@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dao/produit_dao.dart';
@@ -5,24 +6,53 @@ import 'data/base.dart';
 import 'produit_box.dart';
 import 'add_produit_form.dart';
 import 'produit_details.dart';
+import 'user_profile.dart';
+import 'services/favorites_service.dart';
 import 'package:drift/drift.dart' as drift;
 
-class ProduitsList extends StatelessWidget {
+class ProduitsList extends StatefulWidget {
   final ProduitDao dao;
 
   const ProduitsList({super.key, required this.dao});
+
+  @override
+  State<ProduitsList> createState() => _ProduitsListState();
+}
+
+class _ProduitsListState extends State<ProduitsList> {
+  final user = FirebaseAuth.instance.currentUser;
+  late bool isAdmin;
+  final FavoritesService _favService = FavoritesService();
+  bool _isLoadingFavs = true;
+
+  @override
+  void initState() {
+    super.initState();
+    isAdmin = user?.email == 'admin@gmail.com';
+    if (!isAdmin && user != null) {
+      _favService.init().then((_) {
+        if (mounted) {
+          setState(() {
+            _isLoadingFavs = false;
+          });
+        }
+      });
+    } else {
+      _isLoadingFavs = false;
+    }
+  }
 
   void _addProduit(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddProduitForm(dao: dao),
+        builder: (context) => AddProduitForm(dao: widget.dao),
       ),
     );
   }
 
   void _delProduit(Produit produit) {
-    dao.deleteProduit(produit);
+    widget.dao.deleteProduit(produit);
   }
 
   void _showDetails(BuildContext context, Produit produit) {
@@ -57,7 +87,7 @@ class ProduitsList extends StatelessWidget {
     ];
 
     for (var p in samples) {
-      await dao.insertProduit(p);
+      await widget.dao.insertProduit(p);
     }
     
     if (context.mounted) {
@@ -79,10 +109,25 @@ class ProduitsList extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          if (isAdmin)
+            IconButton(
+              icon: const Icon(Icons.cloud_download, color: Colors.black),
+              onPressed: () => _seedData(context),
+              tooltip: 'Charger des exemples',
+            ),
+          if (!isAdmin)
+             IconButton(
+               icon: const Icon(Icons.person, color: Colors.blue),
+               onPressed: () {
+                 Navigator.push(context, MaterialPageRoute(builder: (_) => UserProfile(dao: widget.dao)));
+               },
+             ),
           IconButton(
-            icon: const Icon(Icons.cloud_download, color: Colors.black),
-            onPressed: () => _seedData(context),
-            tooltip: 'Charger des exemples',
+            icon: const Icon(Icons.logout, color: Colors.red),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            tooltip: 'Déconnexion',
           ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black),
@@ -92,12 +137,12 @@ class ProduitsList extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<Produit>>(
-        stream: dao.getAllProduits(),
+        stream: widget.dao.getAllProduits(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || _isLoadingFavs) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -110,17 +155,28 @@ class ProduitsList extends StatelessWidget {
             itemCount: produits.length,
             itemBuilder: (context, index) {
               final produit = produits[index];
+              final isFav = !isAdmin && user != null && _favService.isFavorite(user!.uid, produit.id);
+              
               return ProduitBox(
                 produit: produit,
-                onChanged: (value) {},
+                onChanged: null,
                 delProduit: (context) => _delProduit(produit),
                 onTap: () => _showDetails(context, produit),
+                canDelete: isAdmin,
+                showFavorite: !isAdmin,
+                isFavorite: isFav,
+                onToggleFavorite: !isAdmin && user != null 
+                    ? () async {
+                        await _favService.toggleFavorite(user!.uid, produit.id);
+                        setState(() {});
+                      } 
+                    : null,
               );
             },
           );
         },
       ),
-      floatingActionButton: Container(
+      floatingActionButton: isAdmin ? Container(
         height: 65,
         width: 65,
         decoration: BoxDecoration(
@@ -136,7 +192,7 @@ class ProduitsList extends StatelessWidget {
           ),
           child: const Icon(Icons.add, color: Colors.black, size: 30),
         ),
-      ),
+      ) : null,
     );
   }
 }

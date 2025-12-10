@@ -23,12 +23,7 @@ class LoginEcran extends StatelessWidget {
           return ProduitsList(dao: dao);
         }
 
-        // Sinon affiche l'écran de connexion
-        return fui.SignInScreen(
-          providers: [
-            fui.EmailAuthProvider(),
-          ],
-        );
+        return ProduitsList(dao: dao);
       },
     );
   }

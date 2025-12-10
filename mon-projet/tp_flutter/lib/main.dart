@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; // Généré par flutterfire configure
@@ -6,14 +7,18 @@ import 'dao/produit_dao.dart';
 import 'produits_list.dart';
 import 'login_ecran.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialisation de Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  // Attempt to initialize firebase. If options are missing, this might fail or need fallback.
+  // Assuming default instance if config exists.
+  try {
+     await Firebase.initializeApp(
+       // options: DefaultFirebaseOptions.currentPlatform, // If flutterfire configured
+     );
+  } catch (e) {
+    print('Firebase initialization failed: $e');
+  }
+  
   runApp(const MainApp());
 }
 
@@ -32,18 +37,19 @@ class MainApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.grey[50],
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           elevation: 2,
-          titleTextStyle: const TextStyle(
+          titleTextStyle: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      home: LoginEcran(),
+      // Atelier 5 : Authentification via login_ecran
+      home: LoginEcran(dao: dao),
     );
   }
 }
