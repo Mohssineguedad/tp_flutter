@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dao/produit_dao.dart';
 import 'data/base.dart';
 import 'produit_box.dart';
@@ -81,7 +82,7 @@ class _ProduitsListState extends State<ProduitsList> {
         libelle: drift.Value('Converse Chuck Taylor'),
         description: drift.Value('Classique indémodable'),
         prix: drift.Value(800.0),
-        photo: drift.Value('https://media.converse.com/is/image/converse/M9160_A_107X1?\$media_1_1\$'),
+        photo: drift.Value('https://media.converse.com/is/image/converse/M9160_A_107X1'),
       ),
     ];
 
@@ -127,6 +128,11 @@ class _ProduitsListState extends State<ProduitsList> {
               FirebaseAuth.instance.signOut();
             },
             tooltip: 'Déconnexion',
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.black),
+            onPressed: () => FirebaseAuth.instance.signOut(),
+            tooltip: 'Se déconnecter',
           ),
         ],
       ),
@@ -174,7 +180,7 @@ class _ProduitsListState extends State<ProduitsList> {
         height: 65,
         width: 65,
         decoration: BoxDecoration(
-          color: const Color(0xFFEADDFF), // Light purple from image
+          color: const Color(0xFFEADDFF),
           borderRadius: BorderRadius.circular(16),
         ),
         child: FloatingActionButton(

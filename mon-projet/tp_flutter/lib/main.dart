@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // Généré par flutterfire configure
 import 'data/base.dart';
 import 'dao/produit_dao.dart';
 import 'produits_list.dart';
@@ -31,7 +33,6 @@ class MainApp extends StatelessWidget {
     
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // Thème avec primarySwatch: Colors.blue
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,

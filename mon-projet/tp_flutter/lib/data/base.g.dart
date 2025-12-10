@@ -11,58 +11,38 @@ class $ProduitsTable extends Produits with TableInfo<$ProduitsTable, Produit> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _libelleMeta = const VerificationMeta(
-    'libelle',
-  );
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _libelleMeta =
+      const VerificationMeta('libelle');
   @override
   late final GeneratedColumn<String> libelle = GeneratedColumn<String>(
-    'libelle',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
+      'libelle', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(''),
-  );
+      'description', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(''));
   static const VerificationMeta _prixMeta = const VerificationMeta('prix');
   @override
   late final GeneratedColumn<double> prix = GeneratedColumn<double>(
-    'prix',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+      'prix', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
   static const VerificationMeta _photoMeta = const VerificationMeta('photo');
   @override
   late final GeneratedColumn<String> photo = GeneratedColumn<String>(
-    'photo',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(''),
-  );
+      'photo', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(''));
   @override
   List<GeneratedColumn> get $columns => [id, libelle, description, prix, photo];
   @override
@@ -71,45 +51,34 @@ class $ProduitsTable extends Produits with TableInfo<$ProduitsTable, Produit> {
   String get actualTableName => $name;
   static const String $name = 'produits';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<Produit> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<Produit> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('libelle')) {
-      context.handle(
-        _libelleMeta,
-        libelle.isAcceptableOrUnknown(data['libelle']!, _libelleMeta),
-      );
+      context.handle(_libelleMeta,
+          libelle.isAcceptableOrUnknown(data['libelle']!, _libelleMeta));
     } else if (isInserting) {
       context.missing(_libelleMeta);
     }
     if (data.containsKey('description')) {
       context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
           _descriptionMeta,
-        ),
-      );
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     }
     if (data.containsKey('prix')) {
       context.handle(
-        _prixMeta,
-        prix.isAcceptableOrUnknown(data['prix']!, _prixMeta),
-      );
+          _prixMeta, prix.isAcceptableOrUnknown(data['prix']!, _prixMeta));
     } else if (isInserting) {
       context.missing(_prixMeta);
     }
     if (data.containsKey('photo')) {
       context.handle(
-        _photoMeta,
-        photo.isAcceptableOrUnknown(data['photo']!, _photoMeta),
-      );
+          _photoMeta, photo.isAcceptableOrUnknown(data['photo']!, _photoMeta));
     }
     return context;
   }
@@ -120,26 +89,16 @@ class $ProduitsTable extends Produits with TableInfo<$ProduitsTable, Produit> {
   Produit map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Produit(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      libelle: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}libelle'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      )!,
-      prix: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}prix'],
-      )!,
-      photo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}photo'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      libelle: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}libelle'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      prix: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}prix'])!,
+      photo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}photo'])!,
     );
   }
 
@@ -155,13 +114,12 @@ class Produit extends DataClass implements Insertable<Produit> {
   final String description;
   final double prix;
   final String photo;
-  const Produit({
-    required this.id,
-    required this.libelle,
-    required this.description,
-    required this.prix,
-    required this.photo,
-  });
+  const Produit(
+      {required this.id,
+      required this.libelle,
+      required this.description,
+      required this.prix,
+      required this.photo});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -183,10 +141,8 @@ class Produit extends DataClass implements Insertable<Produit> {
     );
   }
 
-  factory Produit.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory Produit.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Produit(
       id: serializer.fromJson<int>(json['id']),
@@ -208,26 +164,25 @@ class Produit extends DataClass implements Insertable<Produit> {
     };
   }
 
-  Produit copyWith({
-    int? id,
-    String? libelle,
-    String? description,
-    double? prix,
-    String? photo,
-  }) => Produit(
-    id: id ?? this.id,
-    libelle: libelle ?? this.libelle,
-    description: description ?? this.description,
-    prix: prix ?? this.prix,
-    photo: photo ?? this.photo,
-  );
+  Produit copyWith(
+          {int? id,
+          String? libelle,
+          String? description,
+          double? prix,
+          String? photo}) =>
+      Produit(
+        id: id ?? this.id,
+        libelle: libelle ?? this.libelle,
+        description: description ?? this.description,
+        prix: prix ?? this.prix,
+        photo: photo ?? this.photo,
+      );
   Produit copyWithCompanion(ProduitsCompanion data) {
     return Produit(
       id: data.id.present ? data.id.value : this.id,
       libelle: data.libelle.present ? data.libelle.value : this.libelle,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
+      description:
+          data.description.present ? data.description.value : this.description,
       prix: data.prix.present ? data.prix.value : this.prix,
       photo: data.photo.present ? data.photo.value : this.photo,
     );
@@ -277,8 +232,8 @@ class ProduitsCompanion extends UpdateCompanion<Produit> {
     this.description = const Value.absent(),
     required double prix,
     this.photo = const Value.absent(),
-  }) : libelle = Value(libelle),
-       prix = Value(prix);
+  })  : libelle = Value(libelle),
+        prix = Value(prix);
   static Insertable<Produit> custom({
     Expression<int>? id,
     Expression<String>? libelle,
@@ -295,13 +250,12 @@ class ProduitsCompanion extends UpdateCompanion<Produit> {
     });
   }
 
-  ProduitsCompanion copyWith({
-    Value<int>? id,
-    Value<String>? libelle,
-    Value<String>? description,
-    Value<double>? prix,
-    Value<String>? photo,
-  }) {
+  ProduitsCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? libelle,
+      Value<String>? description,
+      Value<double>? prix,
+      Value<String>? photo}) {
     return ProduitsCompanion(
       id: id ?? this.id,
       libelle: libelle ?? this.libelle,
@@ -356,22 +310,20 @@ abstract class _$ProduitsDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [produits];
 }
 
-typedef $$ProduitsTableCreateCompanionBuilder =
-    ProduitsCompanion Function({
-      Value<int> id,
-      required String libelle,
-      Value<String> description,
-      required double prix,
-      Value<String> photo,
-    });
-typedef $$ProduitsTableUpdateCompanionBuilder =
-    ProduitsCompanion Function({
-      Value<int> id,
-      Value<String> libelle,
-      Value<String> description,
-      Value<double> prix,
-      Value<String> photo,
-    });
+typedef $$ProduitsTableCreateCompanionBuilder = ProduitsCompanion Function({
+  Value<int> id,
+  required String libelle,
+  Value<String> description,
+  required double prix,
+  Value<String> photo,
+});
+typedef $$ProduitsTableUpdateCompanionBuilder = ProduitsCompanion Function({
+  Value<int> id,
+  Value<String> libelle,
+  Value<String> description,
+  Value<double> prix,
+  Value<String> photo,
+});
 
 class $$ProduitsTableFilterComposer
     extends Composer<_$ProduitsDatabase, $ProduitsTable> {
@@ -383,29 +335,19 @@ class $$ProduitsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get libelle => $composableBuilder(
-    column: $table.libelle,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.libelle, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.description, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<double> get prix => $composableBuilder(
-    column: $table.prix,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.prix, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get photo => $composableBuilder(
-    column: $table.photo,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.photo, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProduitsTableOrderingComposer
@@ -418,29 +360,19 @@ class $$ProduitsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get libelle => $composableBuilder(
-    column: $table.libelle,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.libelle, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.description, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<double> get prix => $composableBuilder(
-    column: $table.prix,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.prix, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get photo => $composableBuilder(
-    column: $table.photo,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.photo, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProduitsTableAnnotationComposer
@@ -459,9 +391,7 @@ class $$ProduitsTableAnnotationComposer
       $composableBuilder(column: $table.libelle, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
+      column: $table.description, builder: (column) => column);
 
   GeneratedColumn<double> get prix =>
       $composableBuilder(column: $table.prix, builder: (column) => column);
@@ -470,27 +400,20 @@ class $$ProduitsTableAnnotationComposer
       $composableBuilder(column: $table.photo, builder: (column) => column);
 }
 
-class $$ProduitsTableTableManager
-    extends
-        RootTableManager<
-          _$ProduitsDatabase,
-          $ProduitsTable,
-          Produit,
-          $$ProduitsTableFilterComposer,
-          $$ProduitsTableOrderingComposer,
-          $$ProduitsTableAnnotationComposer,
-          $$ProduitsTableCreateCompanionBuilder,
-          $$ProduitsTableUpdateCompanionBuilder,
-          (
-            Produit,
-            BaseReferences<_$ProduitsDatabase, $ProduitsTable, Produit>,
-          ),
-          Produit,
-          PrefetchHooks Function()
-        > {
+class $$ProduitsTableTableManager extends RootTableManager<
+    _$ProduitsDatabase,
+    $ProduitsTable,
+    Produit,
+    $$ProduitsTableFilterComposer,
+    $$ProduitsTableOrderingComposer,
+    $$ProduitsTableAnnotationComposer,
+    $$ProduitsTableCreateCompanionBuilder,
+    $$ProduitsTableUpdateCompanionBuilder,
+    (Produit, BaseReferences<_$ProduitsDatabase, $ProduitsTable, Produit>),
+    Produit,
+    PrefetchHooks Function()> {
   $$ProduitsTableTableManager(_$ProduitsDatabase db, $ProduitsTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -499,56 +422,53 @@ class $$ProduitsTableTableManager
               $$ProduitsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$ProduitsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> libelle = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<double> prix = const Value.absent(),
-                Value<String> photo = const Value.absent(),
-              }) => ProduitsCompanion(
-                id: id,
-                libelle: libelle,
-                description: description,
-                prix: prix,
-                photo: photo,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required String libelle,
-                Value<String> description = const Value.absent(),
-                required double prix,
-                Value<String> photo = const Value.absent(),
-              }) => ProduitsCompanion.insert(
-                id: id,
-                libelle: libelle,
-                description: description,
-                prix: prix,
-                photo: photo,
-              ),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> libelle = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<double> prix = const Value.absent(),
+            Value<String> photo = const Value.absent(),
+          }) =>
+              ProduitsCompanion(
+            id: id,
+            libelle: libelle,
+            description: description,
+            prix: prix,
+            photo: photo,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String libelle,
+            Value<String> description = const Value.absent(),
+            required double prix,
+            Value<String> photo = const Value.absent(),
+          }) =>
+              ProduitsCompanion.insert(
+            id: id,
+            libelle: libelle,
+            description: description,
+            prix: prix,
+            photo: photo,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$ProduitsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$ProduitsDatabase,
-      $ProduitsTable,
-      Produit,
-      $$ProduitsTableFilterComposer,
-      $$ProduitsTableOrderingComposer,
-      $$ProduitsTableAnnotationComposer,
-      $$ProduitsTableCreateCompanionBuilder,
-      $$ProduitsTableUpdateCompanionBuilder,
-      (Produit, BaseReferences<_$ProduitsDatabase, $ProduitsTable, Produit>),
-      Produit,
-      PrefetchHooks Function()
-    >;
+typedef $$ProduitsTableProcessedTableManager = ProcessedTableManager<
+    _$ProduitsDatabase,
+    $ProduitsTable,
+    Produit,
+    $$ProduitsTableFilterComposer,
+    $$ProduitsTableOrderingComposer,
+    $$ProduitsTableAnnotationComposer,
+    $$ProduitsTableCreateCompanionBuilder,
+    $$ProduitsTableUpdateCompanionBuilder,
+    (Produit, BaseReferences<_$ProduitsDatabase, $ProduitsTable, Produit>),
+    Produit,
+    PrefetchHooks Function()>;
 
 class $ProduitsDatabaseManager {
   final _$ProduitsDatabase _db;
