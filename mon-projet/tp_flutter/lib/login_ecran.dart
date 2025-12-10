@@ -22,37 +22,7 @@ class LoginEcran extends StatelessWidget {
           );
         }
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Mon Compte'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-              )
-            ],
-          ),
-          body: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                color: Colors.blue[50],
-                child: Row(
-                  children: [
-                    const Icon(Icons.person),
-                    const SizedBox(width: 10),
-                    Text('Connecté en tant que : ${snapshot.data!.email}'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ProduitsList(dao: dao),
-              ),
-            ],
-          ),
-        );
+        return ProduitsList(dao: dao);
       },
     );
   }
